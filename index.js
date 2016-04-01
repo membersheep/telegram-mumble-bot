@@ -15,7 +15,7 @@ Mumble.connect( config.MUMBLE_URL, options, function (error, connection) {
     }
 
     console.log('Connected');
-    connection.authenticate(config.MUMBLE_USER);
+    connection.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
     connection.on( 'initialized', onInit );
     connection.on( 'user-connect', onUserConnected );
 });
