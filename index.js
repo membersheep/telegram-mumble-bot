@@ -12,15 +12,17 @@ var options = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 };
-var mumbleClient = Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
+var mumbleClient;
+Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     if(error) {
       console.log(error);
       return;
     }
     console.log('Connected');
-    connection.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
-    connection.on('initialized', onInit);
-    connection.on('user-connect', onUserConnected);
+    mumbleClient = client;
+    client.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
+    client.on('initialized', onInit);
+    client.on('user-connect', onUserConnected);
 });
 
 // SERVER SETUP
