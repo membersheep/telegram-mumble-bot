@@ -28,7 +28,7 @@ var onUserConnected = function(user) {
   var messageText = user.name + " just connected to mumble!";
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
-      throw err;
+      console.log(err);
     }
   });
 };
