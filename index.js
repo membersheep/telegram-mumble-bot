@@ -9,17 +9,18 @@ var api = new TelegramBot(config.TELEGRAM_TOKEN);
 
 // MUMBLE SETUP
 var options = {
-  key: fs.readFileSync( 'key.pem' ),
-  cert: fs.readFileSync( 'cert.pem' )
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
 };
-Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
-    if( error ) {
-      throw new Error( error );
+var mumbleClient = Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
+    if(error) {
+      console.log(error);
+      return;
     }
     console.log('Connected');
     connection.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
-    connection.on( 'initialized', onInit );
-    connection.on( 'user-connect', onUserConnected );
+    connection.on('initialized', onInit);
+    connection.on('user-connect', onUserConnected);
 });
 
 // SERVER SETUP
@@ -35,7 +36,7 @@ var onInit = function() {
 
 var onUserConnected = function(user) {
   console.log('User connected');
-  var messageText = user.name + " just connected to mumble!";
+  var messageText = user.name + ' just connected to mumble! Now there are ' + mumbleClient.users().length + ' users connected.';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
       console.log(err);
