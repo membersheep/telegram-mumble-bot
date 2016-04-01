@@ -9,7 +9,7 @@ var options = {
   cert: fs.readFileSync( 'cert.pem' )
 };
 
-mumble.connect( config.MUMBLE_URL, options, function (error, connection) {
+Mumble.connect( config.MUMBLE_URL, options, function (error, connection) {
     if( error ) {
       throw new Error( error );
     }
