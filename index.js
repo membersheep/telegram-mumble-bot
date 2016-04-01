@@ -1,7 +1,7 @@
 var config = require('./config');
 var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
- var http = require('http');
+var http = require('http');
 var fs = require('fs');
 
 // TELEGRAM SETUP
@@ -23,7 +23,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
 });
 
 // SERVER SETUP
-https.createServer(options, function(req, res) {
+http.createServer(options, function(req, res) {
   res.writeHead(200);
   res.end('STATUS: OK\n');
 }).listen(process.env.PORT);
