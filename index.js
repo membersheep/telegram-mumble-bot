@@ -23,7 +23,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
 });
 
 // SERVER SETUP
-http.createServer(options, function(req, res) {
+http.createServer(function(req, res) {
   res.writeHead(200);
   res.end('STATUS: OK\n');
 }).listen(process.env.PORT);
