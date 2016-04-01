@@ -3,7 +3,7 @@ var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
 var fs = require('fs');
 
-var api = new TelegramBot(config.TOKEN);
+var api = new TelegramBot(config.TELEGRAM_TOKEN);
 var options = {
   key: fs.readFileSync( 'key.pem' ),
   cert: fs.readFileSync( 'cert.pem' )
