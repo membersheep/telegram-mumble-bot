@@ -1,15 +1,18 @@
 var config = require('./config');
 var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
+ var http = require('http');
 var fs = require('fs');
 
+// TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
+
+// MUMBLE SETUP
 var options = {
   key: fs.readFileSync( 'key.pem' ),
   cert: fs.readFileSync( 'cert.pem' )
 };
-
-Mumble.connect( config.MUMBLE_URL, options, function (error, connection) {
+Mumble.connect( config.MUMBLE_URL, options, function(error, connection) {
     if( error ) {
       throw new Error( error );
     }
@@ -19,6 +22,13 @@ Mumble.connect( config.MUMBLE_URL, options, function (error, connection) {
     connection.on( 'user-connect', onUserConnected );
 });
 
+// SERVER SETUP
+https.createServer(options, function(req, res) {
+  res.writeHead(200);
+  res.end('STATUS: OK\n');
+}).listen(process.env.PORT);
+
+// FUNCTIONS
 var onInit = function() {
   console.log('Connection initialized');
 };
