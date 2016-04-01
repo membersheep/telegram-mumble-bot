@@ -23,6 +23,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     client.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
     client.on('initialized', onInit);
     client.on('user-connect', onUserConnected);
+    client.on('user-disconnect', onUserDisconnected);
 });
 
 // SERVER SETUP
@@ -37,8 +38,18 @@ var onInit = function() {
 };
 
 var onUserConnected = function(user) {
-  console.log('User connected');
-  var messageText = user.name + ' just connected to mumble! Now there are ' + mumbleClient.users().length + ' users connected.';
+  console.log(user.name + ' connected');
+  var messageText = user.name + ' just connected to mumble!';
+  api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
+    if (err) {
+      console.log(err);
+    }
+  });
+};
+
+var onUserDisconnected = function(user) {
+  console.log(user.name + ' disconnected');
+  var messageText = user.name + ' just disconnected from mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
       console.log(err);
