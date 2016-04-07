@@ -6,6 +6,9 @@ var fs = require('fs');
 
 // TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
+api.setWebhook({url: config.WEBHOOK_BASE_URL+config.WEBHOOK_PATH}, function() {
+  console.log('Telegram webhook set');
+});
 
 // MUMBLE SETUP
 var options = {
@@ -18,7 +21,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
       console.log(error);
       return;
     }
-    console.log('Connected');
+    console.log('Connected to Mumble.');
     mumbleClient = client;
     client.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
     client.on('initialized', onInit);
@@ -27,12 +30,19 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
 });
 
 // SERVER SETUP
-http.createServer(function(req, res) {
+var server = http.createServer(function(req, res) {
   res.writeHead(200);
   res.end('STATUS: OK\n');
-}).listen(process.env.PORT);
+});
+server.get(config.WEBHOOK_PATH, function (request, response) {
+  response.simpleText(200, "Hello World!");
+});
+server.listen(process.env.PORT);
 
-// FUNCTIONS
+// LISTENERS
+
+
+// MUMBLE LISTENER FUNCTIONS
 var onInit = function() {
   console.log('Connection initialized');
 };
@@ -55,4 +65,9 @@ var onUserDisconnected = function(user) {
       console.log(err);
     }
   });
+};
+
+// TELEGRAM LISTENER FUNCTIONS
+var onGetConnectedUsers = function() {
+
 };
