@@ -1,4 +1,5 @@
 var config = require('./config');
+var express = require('express');
 var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
 var http = require('http');
@@ -27,24 +28,61 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     client.on('initialized', onInit);
     client.on('user-connect', onUserConnected);
     client.on('user-disconnect', onUserDisconnected);
+    client.on('message', onMessage);
 });
 
 // SERVER SETUP
-var server = http.createServer(function(req, res) {
-  res.writeHead(200);
-  res.end('STATUS: OK\n');
+var app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', statusHandler);
+app.post(config.WEBHOOK_PATH, telegramHandler);
+var server = app.listen(config.SERVER_PORT, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Server listening at http://%s:%s', host, port);
 });
-server.get(config.WEBHOOK_PATH, function (request, response) {
-  response.simpleText(200, "Hello World!");
-});
-server.listen(process.env.PORT);
-
-// LISTENERS
 
 
+// HANDLERS
+var statusHandler = function status(req, res, next) {
+  res.json({ status: 'UP' });
+};
+
+var telegramHandler = function(req, res) {
+  if (!req.hasOwnProperty('body')) {
+    return res.send();
+  }
+  var body = req.body;
+  if (body.hasOwnProperty('message')) {
+    readCommand(body.message);
+  }
+  res.send();
+};
+
+// BOT COMMANDS
+var readCommand = function(message) {
+  if (message.text == "/start") {
+    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: 'yo nigga' }, function (err, message) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  } else if (message.text == "/mumble") {
+    var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
+    mumbleClient.users().forEach(function(user) {
+      responseText += user.name + '\n';
+    });
+    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: responseText }, function (err, message) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+};
 // MUMBLE LISTENER FUNCTIONS
 var onInit = function() {
-  console.log('Connection initialized');
+  console.log('Mumble connection initialized');
 };
 
 var onUserConnected = function(user) {
@@ -67,7 +105,12 @@ var onUserDisconnected = function(user) {
   });
 };
 
-// TELEGRAM LISTENER FUNCTIONS
-var onGetConnectedUsers = function() {
-
+var onMessage = function (message, user) {
+  console.log('Mumble message received');
+  console.log(user.name + ' : ' + message);
+  api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: data.actor + ' : ' + data.message }, function (err, message) {
+    if (err) {
+      console.log(err);
+    }
+  });
 };
