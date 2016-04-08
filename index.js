@@ -30,6 +30,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     client.on('user-connect', onUserConnected);
     client.on('user-disconnect', onUserDisconnected);
     client.on('message', onMessage);
+    client.on('ping', onPing);
 });
 
 // SERVER SETUP
@@ -110,4 +111,9 @@ var onMessage = function (message, user) {
       console.log(err);
     }
   });
+};
+
+var onPing = function (message) {
+  console.log('Ping message received');
+  console.log(message);
 };
