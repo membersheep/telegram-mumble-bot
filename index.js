@@ -1,5 +1,6 @@
 var config = require('./config');
 var express = require('express');
+var bodyParser = require('body-parser');
 var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
 var http = require('http');
