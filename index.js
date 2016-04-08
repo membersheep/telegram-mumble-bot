@@ -46,7 +46,7 @@ var server = app.listen(config.SERVER_PORT, function () {
 
 
 // HANDLERS
-var statusHandler = function status(req, res, next) {
+var statusHandler = function (req, res, next) {
   res.json({ status: 'UP' });
 };
 
