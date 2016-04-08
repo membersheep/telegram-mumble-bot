@@ -103,7 +103,7 @@ var onUserDisconnected = function(user) {
 var onMessage = function (message, user) {
   console.log('Mumble message received');
   console.log(user.name + ' : ' + message);
-  api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: data.actor + ' : ' + data.message }, function (err, message) {
+  api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: user.name + ' : ' + message }, function (err, message) {
     if (err) {
       console.log(err);
     }
