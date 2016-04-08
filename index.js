@@ -57,17 +57,17 @@ var server = app.listen(config.SERVER_PORT, function () {
 
 var readCommand = function(message) {
   if (message.text == "/start") {
-    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: 'yo nigga' }, function (err, message) {
+    api.sendMessage({ chat_id: message.chat.id, text: 'yo nigga' }, function (err, message) {
       if (err) {
         console.log(err);
       }
     });
-  } else if (message.text == "/mumble") {
+  } else if (message.text.startsWith('/mumble')) {
     var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
     mumbleClient.users().forEach(function(user) {
       responseText += user.name + '\n';
     });
-    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: responseText }, function (err, message) {
+    api.sendMessage({ chat_id: message.chat.id, text: responseText }, function (err, message) {
       if (err) {
         console.log(err);
       }
