@@ -88,7 +88,7 @@ var onUserConnected = function(user) {
   console.log(user.name + ' connected');
   usersList.push(user);
   console.log('Current users list:');
-  console.log(userList);
+  console.log(usersList);
   var messageText = user.name + ' just connected to mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
@@ -103,7 +103,7 @@ var onUserDisconnected = function(userDisconnected) {
     return user.name != userDisconnected.name;
   });
   console.log('Current users list:');
-  console.log(userList);
+  console.log(usersList);
   var messageText = userDisconnected.name + ' just disconnected from mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
