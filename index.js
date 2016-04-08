@@ -46,26 +46,6 @@ var server = app.listen(config.SERVER_PORT, function () {
   console.log('Server listening at http://%s:%s', host, port);
 });
 
-// BOT COMMANDS
-var readCommand = function(message) {
-  if (message.text == "/start") {
-    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: 'yo nigga' }, function (err, message) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  } else if (message.text == "/mumble") {
-    var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
-    mumbleClient.users().forEach(function(user) {
-      responseText += user.name + '\n';
-    });
-    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: responseText }, function (err, message) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  }
-};
 // MUMBLE LISTENER FUNCTIONS
 var onInit = function() {
   console.log('Mumble connection initialized');
