@@ -5,6 +5,8 @@ var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
 var http = require('http');
 var fs = require('fs');
+var statusHandler = require('./routes/status');
+var telegramHandler = require('./routes/telegram');
 
 // TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
@@ -43,23 +45,6 @@ var server = app.listen(config.SERVER_PORT, function () {
   var port = server.address().port;
   console.log('Server listening at http://%s:%s', host, port);
 });
-
-
-// HANDLERS
-var statusHandler = function (req, res, next) {
-  res.json({ status: 'UP' });
-};
-
-var telegramHandler = function(req, res) {
-  if (!req.hasOwnProperty('body')) {
-    return res.send();
-  }
-  var body = req.body;
-  if (body.hasOwnProperty('message')) {
-    readCommand(body.message);
-  }
-  res.send();
-};
 
 // BOT COMMANDS
 var readCommand = function(message) {
