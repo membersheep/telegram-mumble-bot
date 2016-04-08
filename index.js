@@ -5,8 +5,6 @@ var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
 var http = require('http');
 var fs = require('fs');
-var statusHandler = require('./routes/status');
-var telegramHandler = require('./routes/telegram');
 
 // TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
@@ -38,13 +36,44 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.get('/', statusHandler);
-app.post(config.WEBHOOK_PATH, telegramHandler);
+app.get('/', function status(req, res, next) {
+  res.json({ status: 'UP' });
+});
+app.post(config.WEBHOOK_PATH, function(req, res) {
+  if (!req.hasOwnProperty('body')) {
+    return res.send();
+  }
+  var body = req.body;
+  if (body.hasOwnProperty('message')) {
+    readCommand(body.message);
+  }
+  res.send();
+});
 var server = app.listen(config.SERVER_PORT, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Server listening at http://%s:%s', host, port);
 });
+
+var readCommand = function(message) {
+  if (message.text == "/start") {
+    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: 'yo nigga' }, function (err, message) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  } else if (message.text == "/mumble") {
+    var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
+    mumbleClient.users().forEach(function(user) {
+      responseText += user.name + '\n';
+    });
+    api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: responseText }, function (err, message) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+};
 
 // MUMBLE LISTENER FUNCTIONS
 var onInit = function() {
