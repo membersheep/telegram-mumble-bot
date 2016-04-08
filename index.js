@@ -65,8 +65,8 @@ var readCommand = function(message) {
     });
   } else if (message.text.startsWith('/mumble')) {
     // TODO: Find a way to force the users list update
-    var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
-    mumbleClient.users().forEach(function(user) {
+    var responseText = 'There are ' + usersList.length + ' users connected:\n';
+    usersList.forEach(function(user) {
       responseText += user.name + '\n';
     });
     api.sendMessage({ chat_id: message.chat.id, text: responseText }, function (err, message) {
@@ -88,7 +88,9 @@ var onUserConnected = function(user) {
   console.log(user.name + ' connected');
   usersList.push(user);
   console.log('Current users list:');
-  console.log(usersList);
+  usersList.forEach(function(user) {
+    console.log(user.name + '\n');
+  });
   var messageText = user.name + ' just connected to mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
@@ -103,7 +105,9 @@ var onUserDisconnected = function(userDisconnected) {
     return user.name != userDisconnected.name;
   });
   console.log('Current users list:');
-  console.log(usersList);
+  usersList.forEach(function(user) {
+    console.log(user.name + '\n');
+  });
   var messageText = userDisconnected.name + ' just disconnected from mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
