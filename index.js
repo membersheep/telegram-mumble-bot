@@ -30,7 +30,6 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     client.on('user-connect', onUserConnected);
     client.on('user-disconnect', onUserDisconnected);
     client.on('message', onMessage);
-    client.on('ping', onPing);
 });
 
 // SERVER SETUP
@@ -79,12 +78,17 @@ var readCommand = function(message) {
 };
 
 // MUMBLE LISTENER FUNCTIONS
+var usersList = [];
 var onInit = function() {
   console.log('Mumble connection initialized');
+  usersList = mumbleClient.users();
 };
 
 var onUserConnected = function(user) {
   console.log(user.name + ' connected');
+  usersList.push(user);
+  console.log('Current users list:');
+  console.log(userList);
   var messageText = user.name + ' just connected to mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
@@ -93,9 +97,14 @@ var onUserConnected = function(user) {
   });
 };
 
-var onUserDisconnected = function(user) {
-  console.log(user.name + ' disconnected');
-  var messageText = user.name + ' just disconnected from mumble!';
+var onUserDisconnected = function(userDisconnected) {
+  console.log(userDisconnected.name + ' disconnected');
+  usersList = usersList.filter(function(user) {
+    return user.name != userDisconnected.name;
+  });
+  console.log('Current users list:');
+  console.log(userList);
+  var messageText = userDisconnected.name + ' just disconnected from mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
     if (err) {
       console.log(err);
@@ -111,9 +120,4 @@ var onMessage = function (message, user) {
       console.log(err);
     }
   });
-};
-
-var onPing = function (message) {
-  console.log('Ping message received');
-  console.log(message);
 };
