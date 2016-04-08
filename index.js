@@ -56,6 +56,7 @@ var server = app.listen(config.SERVER_PORT, function () {
 });
 
 var readCommand = function(message) {
+  console.log('Reading command');
   if (message.text == "/start") {
     api.sendMessage({ chat_id: message.chat.id, text: 'yo nigga' }, function (err, message) {
       if (err) {
@@ -63,6 +64,7 @@ var readCommand = function(message) {
       }
     });
   } else if (message.text.startsWith('/mumble')) {
+    // TODO: Find a way to force the users list update
     var responseText = 'There are ' + mumbleClient.users().length + ' users connected:\n';
     mumbleClient.users().forEach(function(user) {
       responseText += user.name + '\n';
