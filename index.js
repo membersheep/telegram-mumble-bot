@@ -106,7 +106,7 @@ var onUserDisconnected = function(userDisconnected) {
   });
   console.log('Current users list:');
   usersList.forEach(function(user) {
-    console.log(user.name + '\n');
+    console.log(user.name);
   });
   var messageText = userDisconnected.name + ' just disconnected from mumble!';
   api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: messageText }, function (err, message) {
