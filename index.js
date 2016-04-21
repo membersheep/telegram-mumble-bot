@@ -57,23 +57,32 @@ var server = app.listen(config.SERVER_PORT, function () {
 
 var readCommand = function(message) {
   console.log('Reading command');
-  if (message.text == "/start") {
-    api.sendMessage({ chat_id: message.chat.id, text: 'yo nigga' }, function (err, message) {
-      if (err) {
-        console.log(err);
+  if (message) {
+    console.log(message);
+    if (message.text) {
+      console.log(message.text);
+      if (message.text == "/start") {
+        api.sendMessage({ chat_id: message.chat.id, text: 'yo nigga' }, function (err, message) {
+          if (err) {
+            console.log(err);
+          }
+        });
+      } else if (message.text.startsWith('/mumble')) {
+        var responseText = 'There are ' + usersList.length + ' users connected:\n';
+        usersList.forEach(function(user) {
+          responseText += user.name + '\n';
+        });
+        api.sendMessage({ chat_id: message.chat.id, text: responseText }, function (err, message) {
+          if (err) {
+            console.log(err);
+          }
+        });
       }
-    });
-  } else if (message.text.startsWith('/mumble')) {
-    // TODO: Find a way to force the users list update
-    var responseText = 'There are ' + usersList.length + ' users connected:\n';
-    usersList.forEach(function(user) {
-      responseText += user.name + '\n';
-    });
-    api.sendMessage({ chat_id: message.chat.id, text: responseText }, function (err, message) {
-      if (err) {
-        console.log(err);
-      }
-    });
+    } else {
+      console.log('Message text missing');
+    }
+  } else {
+    console.log('Message missing');
   }
 };
 
