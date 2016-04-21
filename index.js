@@ -56,13 +56,11 @@ var server = app.listen(config.SERVER_PORT, function () {
 });
 
 var readCommand = function(message) {
-  console.log('Reading command');
+  console.log('Reading command...');
   if (message) {
-    console.log(message);
     if (message.text) {
-      console.log(message.text);
       if (message.text == "/start") {
-        api.sendMessage({ chat_id: message.chat.id, text: 'yo nigga' }, function (err, message) {
+        api.sendMessage({ chat_id: message.chat.id, text: 'yo' }, function (err, message) {
           if (err) {
             console.log(err);
           }
