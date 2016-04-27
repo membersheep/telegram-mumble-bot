@@ -30,6 +30,7 @@ Mumble.connect( config.MUMBLE_URL, options, function(error, client) {
     client.on('user-connect', onUserConnected);
     client.on('user-disconnect', onUserDisconnected);
     client.on('message', onMessage);
+    client.on('error', onError);
 });
 
 // SERVER SETUP
@@ -131,4 +132,14 @@ var onMessage = function (message, user) {
       console.log(err);
     }
   });
+};
+
+var onError = function (error) {
+  console.log('Mumble error:');
+  console.log(error);
+  // api.sendMessage({ chat_id: config.TELEGRAM_CHAT_ID, text: 'ERROR: ' + error }, function (err, message) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
 };
