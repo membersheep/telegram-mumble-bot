@@ -8,8 +8,12 @@ var fs = require('fs');
 
 // TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
-api.setWebhook({url: config.WEBHOOK_BASE_URL+config.WEBHOOK_PATH}, function() {
-  console.log('Telegram webhook set');
+api.setWebhook({url: config.WEBHOOK_BASE_URL+config.WEBHOOK_PATH}, function(err, message) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Telegram webhook set');
+  }
 });
 
 // MUMBLE SETUP
@@ -19,18 +23,18 @@ var options = {
 };
 var mumbleClient;
 Mumble.connect(config.MUMBLE_URL, options, function(error, client) {
-    if(error) {
-      console.log(error);
-      return;
-    }
-    console.log('Connected to Mumble.');
-    mumbleClient = client;
-    client.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
-    client.on('initialized', onInit);
-    client.on('user-connect', onUserConnected);
-    client.on('user-disconnect', onUserDisconnected);
-    client.on('message', onMessage);
-    client.on('error', onError);
+  if (error) {
+    console.log(error);
+    return;
+  }
+  console.log('Connected to Mumble.');
+  mumbleClient = client;
+  client.authenticate(config.MUMBLE_USER, config.MUMBLE_PASSWORD);
+  client.on('initialized', onInit);
+  client.on('user-connect', onUserConnected);
+  client.on('user-disconnect', onUserDisconnected);
+  client.on('message', onMessage);
+  client.on('error', onError);
 });
 
 // SERVER SETUP
@@ -59,8 +63,8 @@ var server = app.listen(config.SERVER_PORT, function () {
 var readCommand = function(message) {
   console.log('Reading command...');
   if (message) {
-    if (message.text) {
-      if (message.text == "/start") {
+    if (message.text !== undefined) {
+      if (message.text === '/start') {
         api.sendMessage({ chat_id: message.chat.id, text: 'yo' }, function (err, message) {
           if (err) {
             console.log(err);
@@ -69,7 +73,7 @@ var readCommand = function(message) {
       } else if (message.text.startsWith('/mumble')) {
         console.log('client ready?'+mumbleClient.ready);
         if (mumbleClient.ready) {
-          postConnectedUsersMessage();
+          postConnectedUsersMessage(message.chat.id);
         }
       }
     } else {
@@ -80,14 +84,16 @@ var readCommand = function(message) {
   }
 };
 
-var postConnectedUsersMessage = function() {
+var postConnectedUsersMessage = function(chatId) {
   var responseText = 'There are ' + usersList.length + ' users connected:\n';
   usersList.forEach(function(user) {
     responseText += user.name + '\n';
   });
-  api.sendMessage({ chat_id: message.chat.id, text: responseText }, function (err, message) {
+  api.sendMessage({ chat_id: chatId, text: responseText }, function (err, message) {
     if (err) {
       console.log(err);
+    } else {
+      console.log(message);
     }
   });
 };
@@ -97,7 +103,7 @@ var usersList = [];
 var onInit = function() {
   console.log('Mumble connection initialized');
   usersList = mumbleClient.users();
-  postConnectedUsersMessage();
+  postConnectedUsersMessage(config.TELEGRAM_CHAT_ID);
 };
 
 var onUserConnected = function(user) {
