@@ -93,8 +93,6 @@ var postConnectedUsersMessage = function(chatId) {
   api.sendMessage({ chat_id: chatId, text: responseText }, function (err, message) {
     if (err) {
       console.log(err);
-    } else {
-      console.log(message);
     }
   });
 };
