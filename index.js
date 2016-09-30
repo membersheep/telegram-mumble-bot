@@ -62,6 +62,7 @@ var server = app.listen(config.SERVER_PORT, function () {
 
 var readCommand = function(message) {
   console.log('Reading command...');
+  console.log(message);
   if (message) {
     if (message.text !== undefined) {
       if (message.text === '/start') {
