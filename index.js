@@ -41,6 +41,7 @@ Mumble.connect(config.MUMBLE_URL, options, function(error, client) {
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('./'));
 app.get('/', function status(req, res, next) {
   res.json({ status: 'UP' });
 });
