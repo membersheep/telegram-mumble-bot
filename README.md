@@ -10,10 +10,11 @@ It can be easily deployed to Heroku, it just needs some config vars to be define
 4. Go to your heroku app settings page and create the following config variables:
   - TELEGRAM_TOKEN: the token you received from the BotFather.
   - TELEGRAM_CHAT_ID: the id of the chat where you want the messages to be posted.
-  - MUMBLE_URL: mumble url in thi s form *mumble://hostname:port*
+  - MUMBLE_URL: mumble url in this format: *mumble://hostname:port*
   - MUMBLE_USER: mumble username
   - MUMBLE_PASSWORD: mumble password
-  - WEBHOOK_BASE_URL: your heroku app url *https://your-heroku-app-name.herokuapp.com*
-  - WEBHOOK_PATH: a custom path for the webhook (defaults to */telegramBot*)
+  - WEBHOOK_BASE_URL: your heroku app url in this format: *https://your-heroku-app-name.herokuapp.com* 
+
+*NOTE: the WEBHOOK_BASE_URL should be formatted just like in the example, without the ending slash*
 
 *NOTE: You will have to change the key and cert files to the one you created for the bot's user if your mumble server requires them.*
