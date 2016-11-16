@@ -14,6 +14,7 @@ It can be easily deployed to Heroku, it just needs some config vars to be define
   - MUMBLE_USER: mumble username
   - MUMBLE_PASSWORD: mumble password
   - WEBHOOK_BASE_URL: your heroku app url in this format: *https://your-heroku-app-name.herokuapp.com* 
+5. To keep your bot always active with heroku free plan I suggest you to register your bot to http://wakemydyno.com/
 
 *NOTE: the WEBHOOK_BASE_URL should be formatted just like in the example, without the ending slash*
 
