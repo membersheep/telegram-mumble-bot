@@ -1,4 +1,9 @@
 # telegram-mumble-bot
+![Heroku](https://heroku-badge.herokuapp.com/?app=fourbot&root=status&style=flat)
+[![Dependencies](https://david-dm.org/membersheep/telegram-mumble-bot/status.svg)](https://david-dm.org/membersheep/telegram-mumble-bot)
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 TelegramMumbleBot is a simple telegram bot to notify mumble events to telegram chats.
 It can be easily deployed to Heroku, it just needs some config vars to be defined on your heroku app.
 
