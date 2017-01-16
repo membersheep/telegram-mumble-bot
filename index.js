@@ -8,7 +8,10 @@ var fs = require('fs');
 
 // TELEGRAM SETUP
 var api = new TelegramBot(config.TELEGRAM_TOKEN);
-api.setWebhook({url: config.WEBHOOK_BASE_URL+config.WEBHOOK_PATH}, function(err, message) {
+api.setWebhook({
+  url: config.WEBHOOK_BASE_URL+config.WEBHOOK_PATH,
+  certificate: fs.readFileSync('sslcert/server.pem')
+}, function(err, message) {
   if (err) {
     console.log(err);
   } else {
@@ -40,7 +43,7 @@ Mumble.connect(config.MUMBLE_URL, options, function(error, client) {
 // SERVER SETUP
 var certificate = {
   key: fs.readFileSync('sslcert/server.key'),
-  cert: fs.readFileSync('sslcert/server.crt')
+  cert: fs.readFileSync('sslcert/server.pem')
 };
 var app = express();
 app.use(bodyParser.json());
