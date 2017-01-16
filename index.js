@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var TelegramBot = require('telegrambot');
 var Mumble = require('mumble');
-var http = require('http');
+var https = require('https');
 var fs = require('fs');
 
 // TELEGRAM SETUP
@@ -38,6 +38,10 @@ Mumble.connect(config.MUMBLE_URL, options, function(error, client) {
 });
 
 // SERVER SETUP
+var certificate = {
+  key: fs.readFileSync('sslcert/server.key'),
+  cert: fs.readFileSync('sslcert/server.crt')
+};
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,11 +59,8 @@ app.post(config.WEBHOOK_PATH, function(req, res) {
   }
   res.send();
 });
-var server = app.listen(config.SERVER_PORT, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log('Server listening at http://%s:%s', host, port);
-});
+var server = https.createServer(certificate, app);
+server.listen(config.SERVER_PORT);
 
 var readCommand = function(message) {
   console.log('Reading command...');
