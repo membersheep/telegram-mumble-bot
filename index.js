@@ -90,9 +90,11 @@ var readCommand = function(message) {
 };
 
 var postConnectedUsersMessage = function(chatId) {
-  var responseText = 'There are ' + usersList.length + ' users connected:\n';
+  var responseText = 'There are ' + (usersList.length > 0 ? usersList.length-1 : 0) + ' users connected:\n';
   usersList.forEach(function(user) {
-    responseText += user.name + '\n';
+    if (user.name != bot) {
+      responseText += user.name + '\n';
+    }
   });
   api.sendMessage({ chat_id: chatId, text: responseText }, function (err, message) {
     if (err) {
