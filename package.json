@@ -1,6 +1,9 @@
 {
   "name": "telegram-mumble-bot",
   "version": "1.0.0",
+  "engines": {
+    "node": "4.8.4"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
